@@ -27,13 +27,25 @@ app.get("/api/hello", function (req, res) {
 // endpoint for a timestamp
 
 app.get("/api/timestamp/:date_string?", (req, res)=> {
-  let fecha = req.params.date_string ? new Date(req.params.date_string) : new Date()
-  res.json({"unix": fecha.getTime() ,"utc": fecha.toUTCString()})
+  let dateString = req.params.date_string ? req.params.date_string : false
+
+  if (/\d{5,}/.test(dateString)) {
+    dateInt = parseInt(dateString);
+    res.json({ unix: dateString, utc: new Date(dateInt).toUTCString() });
+  }
+
+  let dateIntOriginal = new Date(dateString)
+
+  if(new Date(dateString).toString() === "Invalid Date") {
+    res.json({error: "Invalid Date"})
+  } else {
+    res.json({"unix": dateIntOriginal.getTime() ,"utc": dateIntOriginal.toUTCString()})
+  }
 })
 
 
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
+var listener = app.listen(process.env.PORT || 3000, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
