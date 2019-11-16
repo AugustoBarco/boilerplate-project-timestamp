@@ -24,6 +24,13 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+// endpoint for a timestamp
+
+app.get("/api/timestamp/:date_string?", (req, res)=> {
+  let fecha = req.params.date_string ? new Date(req.params.date_string) : new Date()
+  res.json({"unix": fecha.getTime() ,"utc": fecha.toUTCString()})
+})
+
 
 
 // listen for requests :)
